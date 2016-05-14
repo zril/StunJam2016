@@ -9,6 +9,7 @@ TagManager:
   - End
   - Destructible
   - FixedDestructible
+  - Indestructible
   layers:
   - Default
   - TransparentFX

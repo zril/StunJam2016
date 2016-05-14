@@ -69,6 +69,11 @@ public class Main : MonoBehaviour {
                     blocks[x, y].IsDestrutible = true;
                     blocks[x, y].IsFixed = true;
                 }
+                if (child.CompareTag("Indestructible"))
+                {
+                    blocks[x, y].IsDestrutible = false;
+                    blocks[x, y].IsFixed = false;
+                }
             }
         }
 
