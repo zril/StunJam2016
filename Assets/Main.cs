@@ -17,9 +17,12 @@ public class Main : MonoBehaviour {
     private float jumpSpeed = 5f;
     private float bigJumpTime = 0.2f;
     private float turnTime = 0.1f;
-    private float hitboxMargin = 0.10f;
-    private float ballspeed = 3f;
+    private float hitboxMargin = 0.12f;
+    private float ballspeed = 4f;
     private float ballRadius = 0.15f;
+    private float fallDeathHeight = 5f;
+    private float jumpcooldowntime = 0.1f;
+    private float shootcooldowntime = 0.3f;
 
     private List<Block> playerBlocks;
     private float playerVSpeed;
@@ -30,7 +33,9 @@ public class Main : MonoBehaviour {
 
 
     private float jumptimer = 0;
+    private float jumpcooldowntimer = 0;
     private float turntimer = 0;
+    private float shootcooldowntimer = 0;
 
     // Use this for initialization
     void Start () {
@@ -54,6 +59,16 @@ public class Main : MonoBehaviour {
             } else
             {
                 blocks[x, y] = new Block(child.gameObject, x, y);
+                if (child.CompareTag("Destructible"))
+                {
+                    blocks[x, y].IsDestrutible = true;
+                    blocks[x, y].IsFixed = false;
+                }
+                if (child.CompareTag("FixedDestructible"))
+                {
+                    blocks[x, y].IsDestrutible = true;
+                    blocks[x, y].IsFixed = true;
+                }
             }
         }
 
@@ -74,23 +89,39 @@ public class Main : MonoBehaviour {
 
     private void updatePlayer()
     {
+        var animation = player.transform.GetChild(0).GetChild(0).GetComponent<Animation>();
         jumptimer -= Time.deltaTime;
         turntimer -= Time.deltaTime;
+        jumpcooldowntimer -= Time.deltaTime;
+        shootcooldowntimer -= Time.deltaTime;
+
+
+        var walk = false;
+        var jump = false;
+        var fall = false;
+        var shoot1 = false;
+        var shoot2 = false;
 
         if (playerGroundDist() == 0)
         {
-            if (fallHeight - player.transform.position.y > 3)
+            if (fallHeight - player.transform.position.y > fallDeathHeight)
             {
                 Debug.Log("death");
                 SceneManager.LoadScene("scene");
             }
+            if (fallHeight > 0)
+            {
+                fall = true;
+                jumpcooldowntimer = jumpcooldowntime;
+            }
             fallHeight = 0;
         } else
         {
+            jump = true;
             fallHeight = Mathf.Max(fallHeight, player.transform.position.y);
         }
 
-        if (Input.GetKey(jumpButton) && playerGroundDist() == 0)
+        if (Input.GetKey(jumpButton) && playerGroundDist() == 0 && playerCeilingDist() > 0 && jumpcooldowntimer < 0)
         {
             playerVSpeed = jumpSpeed;
             jumptimer = bigJumpTime;
@@ -115,10 +146,12 @@ public class Main : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
+            walk = true;
             if (playerDir < 0)
             {
                 playerDir = 1;
                 turntimer = turnTime;
+                player.transform.Rotate(0, 180, 0);
             } else if (turntimer < 0)
             {
                 player.transform.position = new Vector3(player.transform.position.x + movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
@@ -130,15 +163,16 @@ public class Main : MonoBehaviour {
                     player.transform.position = new Vector3(x - 1, player.transform.position.y, player.transform.position.z);
                 }
             }
-
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
+            walk = true;
             if (playerDir > 0)
             {
                 playerDir = -1;
                 turntimer = turnTime;
+                player.transform.Rotate(0, 180, 0);
             }
             else if (turntimer < 0)
             {
@@ -154,7 +188,6 @@ public class Main : MonoBehaviour {
                 }
             }
         }
-
 
         if (playerVSpeed > 0)
         {
@@ -183,13 +216,58 @@ public class Main : MonoBehaviour {
         }
 
         //action tir de block
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) && shootcooldowntimer < 0)
         {
-            if (Input.GetKey(KeyCode.DownArrow))
+            shoot1 = true;
+            shootcooldowntimer = shootcooldowntime;
+            if (playerGroundDist() > 0)
             {
-                var x = Mathf.RoundToInt(player.transform.position.x);
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    var x = Mathf.RoundToInt(player.transform.position.x);
+                    var y = Mathf.FloorToInt(player.transform.position.y);
+                    spawnPlayerBlock(x, y - 1);
+                }
+                else
+                {
+                    var x = Mathf.FloorToInt(player.transform.position.x);
+                    if (playerDir > 0)
+                    {
+                        x = Mathf.CeilToInt(player.transform.position.x);
+                    }
+                    var y = player.transform.position.y;
+                    spawnPlayerBlock(x + playerDir, y + 1);
+                }
+            } else
+            {
+                var x = Mathf.FloorToInt(player.transform.position.x);
+                if (playerDir > 0)
+                {
+                    x = Mathf.CeilToInt(player.transform.position.x);
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    var y = player.transform.position.y;
+                    spawnPlayerBlock(x + playerDir, y);
+                }
+                else
+                {
+                    var y = player.transform.position.y;
+                    spawnPlayerBlock(x + playerDir, y + 1);
+                }
+            }
+        }
+
+        //action tir de boule
+        if (Input.GetKey(KeyCode.R) && shootcooldowntimer < 0)
+        {
+            shoot2 = true;
+            shootcooldowntimer = shootcooldowntime;
+            if (playerGroundDist() > 0 && Input.GetKey(KeyCode.DownArrow))
+            {
+                var x = player.transform.position.x;
                 var y = Mathf.FloorToInt(player.transform.position.y);
-                spawnPlayerBlock(x, y - 1);
+                shootBall(x, y);
             } else
             {
                 var x = Mathf.FloorToInt(player.transform.position.x);
@@ -198,25 +276,51 @@ public class Main : MonoBehaviour {
                     x = Mathf.CeilToInt(player.transform.position.x);
                 }
                 var y = player.transform.position.y;
-                spawnPlayerBlock(x + playerDir, y + 1);
+
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    y = y - 1;
+                }
+                shootBall(x, y + 1, playerDir);
             }
+                
         }
 
-        //action tir de boule
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            var x = Mathf.FloorToInt(player.transform.position.x);
-            if (playerDir > 0)
-            {
-                x = Mathf.CeilToInt(player.transform.position.x);
-            }
-            var y = player.transform.position.y;
 
-            if (Input.GetKey(KeyCode.DownArrow))
+        //animation
+        if (shoot1)
+        {
+            //animation.Play("jump"); //todo remplacer jump
+            //animation["jump"].speed = 10f;
+        } else if (shoot2)
+        {
+            //animation.Play("jump"); //todo remplacer jump
+            //animation["jump"].speed = 10f;
+        }
+        else if (jump)
+        {
+            animation.Play("jump");
+            animation["jump"].speed = 1f;
+        }
+        else if (fall)
+        {
+            animation.Play("fall");
+            animation["fall"].speed = 3f;
+        }
+        else if (walk)
+        {
+            if (!animation.IsPlaying("fall") && !animation.IsPlaying("jump"))
             {
-                y = y - 1;
+                animation.Play("walk");
             }
-            shootBall(x, y + 1, playerDir);
+            animation["walk"].speed = 1.5f;
+        }
+        else
+        {
+            if (!animation.IsPlaying("fall") && !animation.IsPlaying("jump"))
+            {
+                animation.Play("idle");
+            }
         }
 
         //check collectibles
@@ -230,6 +334,12 @@ public class Main : MonoBehaviour {
 
         //mouvement camera
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
+
+        //retry
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("scene");
+        }
     }
 
     private void updateBlocks()
@@ -280,7 +390,13 @@ public class Main : MonoBehaviour {
         foreach (Ball ball in balls)
         {
             var oldpos = ball.Obj.transform.position;
-            ball.Obj.transform.position = new Vector3(oldpos.x + ball.Speed * Time.deltaTime, oldpos.y, oldpos.z);
+            if (!ball.Vertical)
+            {
+                ball.Obj.transform.position = new Vector3(oldpos.x + ball.Speed * Time.deltaTime, oldpos.y, oldpos.z);
+            } else
+            {
+                ball.Obj.transform.position = new Vector3(oldpos.x, oldpos.y - ball.Speed * Time.deltaTime, oldpos.z);
+            }
 
             var posx1 = Mathf.RoundToInt(ball.Obj.transform.position.x + ballRadius);
             var posy1 = Mathf.RoundToInt(ball.Obj.transform.position.y + ballRadius);
@@ -399,6 +515,14 @@ public class Main : MonoBehaviour {
         balls.Add(ball);
     }
 
+    private void shootBall(float x, float y)
+    {
+        GameObject obj = (GameObject)Instantiate(Resources.Load("Ball"), new Vector3(x, y, 0), Quaternion.identity);
+        Ball ball = new Ball(obj, ballspeed);
+        ball.Vertical = true;
+        balls.Add(ball);
+    }
+
     private bool checkBallCollision(Ball ball, int x, int y)
     {
         bool res = false;
@@ -410,7 +534,10 @@ public class Main : MonoBehaviour {
         else if (blocks[x, y] != null)
         {
             res = true;
-            removeBlock(blocks[x, y]);
+            if (blocks[x, y].IsDestrutible)
+            {
+                removeBlock(blocks[x, y]);
+            }
         }
 
         return res;
