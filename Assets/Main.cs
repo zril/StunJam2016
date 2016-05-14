@@ -481,7 +481,7 @@ public class Main : MonoBehaviour {
 
         if (blocks[x2, y2] == null)
         {
-            GameObject obj = (GameObject)Instantiate(Resources.Load("PlayerWall"), new Vector3(x2, y, 0), Quaternion.identity);
+            GameObject obj = (GameObject)Instantiate(Resources.Load("prefabs/caisse_orange"), new Vector3(x2, y, 0), Quaternion.identity);
             Block b = new Block(obj, x2, y2);
             b.IsFixed = false;
             blocks[x2, y2] = b;
