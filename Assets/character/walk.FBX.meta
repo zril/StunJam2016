@@ -1,0 +1,178 @@
+fileFormatVersion: 2
+guid: 542b41989b6fc414eb8f6b20c4ff1ce6
+timeCreated: 1463238873
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Head
+    100002: IK Chain001
+    100004: IK Chain002
+    100006: IK Chain003
+    100008: IK Chain004
+    100010: LeftArm
+    100012: LeftElbow
+    100014: LeftFoot
+    100016: LeftHand
+    100018: LeftKnee
+    100020: LeftLeg
+    100022: Pelvis
+    100024: RightArm
+    100026: RightElbow
+    100028: RightFoot
+    100030: RightHand
+    100032: RightKnee
+    100034: RightLeg
+    100036: //RootNode
+    400000: Head
+    400002: IK Chain001
+    400004: IK Chain002
+    400006: IK Chain003
+    400008: IK Chain004
+    400010: LeftArm
+    400012: LeftElbow
+    400014: LeftFoot
+    400016: LeftHand
+    400018: LeftKnee
+    400020: LeftLeg
+    400022: Pelvis
+    400024: RightArm
+    400026: RightElbow
+    400028: RightFoot
+    400030: RightHand
+    400032: RightKnee
+    400034: RightLeg
+    400036: //RootNode
+    7400000: walk
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: walk
+      takeName: Take 001
+      firstFrame: 40
+      lastFrame: 76
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: Pelvis
+        weight: 1
+      - path: Pelvis/Head
+        weight: 1
+      - path: Pelvis/Head/LeftArm
+        weight: 1
+      - path: Pelvis/Head/LeftArm/LeftElbow
+        weight: 1
+      - path: Pelvis/Head/LeftArm/LeftElbow/LeftHand
+        weight: 1
+      - path: Pelvis/Head/RightArm
+        weight: 1
+      - path: Pelvis/Head/RightArm/RightElbow
+        weight: 1
+      - path: Pelvis/Head/RightArm/RightElbow/RightHand
+        weight: 1
+      - path: Pelvis/LeftLeg
+        weight: 1
+      - path: Pelvis/LeftLeg/LeftKnee
+        weight: 1
+      - path: Pelvis/LeftLeg/LeftKnee/LeftFoot
+        weight: 1
+      - path: Pelvis/RightLeg
+        weight: 1
+      - path: Pelvis/RightLeg/RightKnee
+        weight: 1
+      - path: Pelvis/RightLeg/RightKnee/RightFoot
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
