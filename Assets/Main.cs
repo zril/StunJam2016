@@ -467,16 +467,28 @@ public class Main : MonoBehaviour {
             animation.Play("death");
             animation["death"].speed = 0.8f;
         }
-        
+
 
         //check collectibles
+        
+
         var posx = Mathf.RoundToInt(player.transform.position.x);
         var posy = Mathf.RoundToInt(player.transform.position.y);
+        if (objects[posx + 1, posy] != null && objects[posx + 1, posy].Obj.CompareTag("End"))
+        {
+            var porteAnim = objects[posx + 1, posy].Obj.GetComponent<Animation>();
+            porteAnim.Play();
+            porteAnim["Take 001"].speed = 0.5f;
+        }
+        if (objects[posx - 1, posy] != null && objects[posx - 1, posy].Obj.CompareTag("End"))
+        {
+            var porteAnim = objects[posx - 1, posy].Obj.GetComponent<Animation>();
+            porteAnim.Play();
+            porteAnim["Take 001"].speed = 0.5f;
+        }
+
         if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("End"))
         {
-            var porteAnim = objects[posx, posy].Obj.GetComponent<Animation>();
-            porteAnim["Take 001"].speed = 0.5f;
-            porteAnim.Play();
             Debug.Log("end");
             reloadLevel(0.5f);
             source.PlayOneShot(winclip);
@@ -592,7 +604,11 @@ public class Main : MonoBehaviour {
                 toDestroy.Add(ball);
             }
 
-
+            ball.LifeTime -= Time.deltaTime;
+            if (ball.LifeTime < 0)
+            {
+                toDestroy.Add(ball);
+            }
         }
 
         foreach (Ball ball in toDestroy)
