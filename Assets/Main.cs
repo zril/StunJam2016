@@ -22,7 +22,7 @@ public class Main : MonoBehaviour {
     private float bigJumpTime = 0.2f;
     private float turnTime = 0.1f;
     private float hitboxMargin = 0.15f;
-    private float ballspeed = 5f;
+    private float ballspeed = 6f;
     private float ballRadius = 0.15f;
     private float fallDeathHeight = 5f;
     private float jumpcooldowntime = 0.1f;
@@ -34,6 +34,7 @@ public class Main : MonoBehaviour {
     private int playerDir = 1;
     private float fallHeight = 0;
     private bool loadingLevel = false;
+    private bool dead = false;
 
 
     private float jumptimer = 0;
@@ -193,83 +194,87 @@ public class Main : MonoBehaviour {
 
         if (freezeMoveTimer < 0)
         {
-            if (Input.GetAxis("Horizontal") > 0)
+            if (!(playerGroundDist() == 0 && Input.GetAxis("Vertical") < 0))
             {
-                walk = true;
-                if (playerDir < 0)
+                if (Input.GetAxis("Horizontal") > 0)
                 {
-                    playerDir = 1;
-                    turntimer = turnTime;
-                    player.transform.Rotate(0, 180, 0);
-                } else if (turntimer < 0)
-                {
-                    player.transform.position = new Vector3(player.transform.position.x + movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
-                    var x = Mathf.CeilToInt(player.transform.position.x);
-                    var y1 = Mathf.FloorToInt(player.transform.position.y + hitboxMargin);
-                    var y2 = Mathf.CeilToInt(player.transform.position.y - hitboxMargin);
-                    if (blocks[x, y1] != null || blocks[x, y2] != null || blocks[x, y2 + 1] != null)
+                    walk = true;
+                    if (playerDir < 0)
                     {
-                        player.transform.position = new Vector3(x - 1, player.transform.position.y, player.transform.position.z);
+                        playerDir = 1;
+                        turntimer = turnTime;
+                        player.transform.Rotate(0, 180, 0);
+                    }
+                    else if (turntimer < 0)
+                    {
+                        player.transform.position = new Vector3(player.transform.position.x + movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
+                        var x = Mathf.CeilToInt(player.transform.position.x);
+                        var y1 = Mathf.FloorToInt(player.transform.position.y + hitboxMargin);
+                        var y2 = Mathf.CeilToInt(player.transform.position.y - hitboxMargin);
+                        if (blocks[x, y1] != null || blocks[x, y2] != null || blocks[x, y2 + 1] != null)
+                        {
+                            player.transform.position = new Vector3(x - 1, player.transform.position.y, player.transform.position.z);
+                        }
                     }
                 }
-            }
 
-            if (Input.GetAxis("Horizontal") < 0)
-            {
-                walk = true;
-                if (playerDir > 0)
+                if (Input.GetAxis("Horizontal") < 0)
                 {
-                    playerDir = -1;
-                    turntimer = turnTime;
-                    player.transform.Rotate(0, 180, 0);
-                }
-                else if (turntimer < 0)
-                {
-                    playerDir = -1;
-                    player.transform.position = new Vector3(player.transform.position.x - movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
-
-                    var x = Mathf.FloorToInt(player.transform.position.x);
-                    var y1 = Mathf.FloorToInt(player.transform.position.y + hitboxMargin);
-                    var y2 = Mathf.CeilToInt(player.transform.position.y - hitboxMargin);
-                    if (blocks[x, y1] != null || blocks[x, y2] != null || blocks[x, y2 + 1] != null)
+                    walk = true;
+                    if (playerDir > 0)
                     {
-                        player.transform.position = new Vector3(x + 1, player.transform.position.y, player.transform.position.z);
+                        playerDir = -1;
+                        turntimer = turnTime;
+                        player.transform.Rotate(0, 180, 0);
+                    }
+                    else if (turntimer < 0)
+                    {
+                        playerDir = -1;
+                        player.transform.position = new Vector3(player.transform.position.x - movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
+
+                        var x = Mathf.FloorToInt(player.transform.position.x);
+                        var y1 = Mathf.FloorToInt(player.transform.position.y + hitboxMargin);
+                        var y2 = Mathf.CeilToInt(player.transform.position.y - hitboxMargin);
+                        if (blocks[x, y1] != null || blocks[x, y2] != null || blocks[x, y2 + 1] != null)
+                        {
+                            player.transform.position = new Vector3(x + 1, player.transform.position.y, player.transform.position.z);
+                        }
                     }
                 }
-            }
 
-            playerVSpeed += vaccel * Time.deltaTime;
+                playerVSpeed += vaccel * Time.deltaTime;
 
-            if (playerVSpeed < -maxDropSpeed)
-            {
-                playerVSpeed = -maxDropSpeed;
-            }
-
-            if (playerVSpeed > 0)
-            {
-                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
-
-                var y = Mathf.CeilToInt(player.transform.position.y);
-                var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
-                var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
-
-                if (blocks[x1, y + 1] != null || blocks[x2, y + 1] != null)
+                if (playerVSpeed < -maxDropSpeed)
                 {
-                    player.transform.position = new Vector3(player.transform.position.x, y - 1, player.transform.position.z);
+                    playerVSpeed = -maxDropSpeed;
                 }
-            }
 
-            if (playerVSpeed < 0)
-            {
-                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
-
-                var y = Mathf.FloorToInt(player.transform.position.y);
-                var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
-                var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
-
-                if (blocks[x1, y] != null || blocks[x2, y] != null)
+                if (playerVSpeed > 0)
                 {
-                    player.transform.position = new Vector3(player.transform.position.x, y + 1, player.transform.position.z);
+                    player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
+
+                    var y = Mathf.CeilToInt(player.transform.position.y);
+                    var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
+                    var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
+
+                    if (blocks[x1, y + 1] != null || blocks[x2, y + 1] != null)
+                    {
+                        player.transform.position = new Vector3(player.transform.position.x, y - 1, player.transform.position.z);
+                    }
+                }
+
+                if (playerVSpeed < 0)
+                {
+                    player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
+
+                    var y = Mathf.FloorToInt(player.transform.position.y);
+                    var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
+                    var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
+
+                    if (blocks[x1, y] != null || blocks[x2, y] != null)
+                    {
+                        player.transform.position = new Vector3(player.transform.position.x, y + 1, player.transform.position.z);
+                    }
                 }
             }
         }
@@ -277,7 +282,6 @@ public class Main : MonoBehaviour {
         //action tir de block
         if (Input.GetAxis("Fire1") > 0 && shootcooldowntimer < 0)
         {
-            shoot1 = true;
             shootcooldowntimer = shootcooldowntime;
             if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
             {
@@ -313,9 +317,8 @@ public class Main : MonoBehaviour {
         }
 
         //action tir de boule
-        if (Input.GetAxis("Fire2") > 0 && shootcooldowntimer < 0)
+        if (Input.GetAxis("Fire2") > 0 && shootcooldowntimer < 0 && balls.Count < 5)
         {
-            shoot2 = true;
             shootcooldowntimer = shootcooldowntime;
             if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
             {
@@ -325,9 +328,9 @@ public class Main : MonoBehaviour {
             }
             else if (Input.GetAxis("Vertical") > 0)
             {
-                var x = player.transform.position.x;
+                /*var x = player.transform.position.x;
                 var y = player.transform.position.y + 1;
-                shootBall(x, y, 1, true);
+                shootBall(x, y, 1, true);*/
             }
             else
             {
@@ -340,48 +343,128 @@ public class Main : MonoBehaviour {
 
                 if (Input.GetAxis("Vertical") < 0)
                 {
-                    y = y - 1;
+                    y = y - 0.75f;
                 }
-                shootBall(x, y + 1, playerDir, false);
+                shootBall(x + playerDir * 0.2f, y + 1, playerDir, false);
             }
         }
-
 
         //animation
-        if (shoot1)
+
+        var aimdown = false;
+        if (Input.GetAxis("Vertical") < 0)
         {
-            //animation.Play("jump"); //todo remplacer jump
-            //animation["jump"].speed = 10f;
-        } else if (shoot2)
-        {
-            //animation.Play("jump"); //todo remplacer jump
-            //animation["jump"].speed = 10f;
+            aimdown = true;
         }
-        else if (jump)
+        if (Input.GetAxis("Fire2") > 0)
         {
-            animation.Play("jump");
-            animation["jump"].speed = 1f;
+            shoot2 = true;
         }
-        else if (fall)
+        if (Input.GetAxis("Fire1") > 0)
         {
-            animation.Play("fall");
-            animation["fall"].speed = 3f;
+            shoot1 = true;
         }
-        else if (walk)
+
+        if (!dead)
         {
-            if (!animation.IsPlaying("fall") && !animation.IsPlaying("jump"))
+            if (playerGroundDist() == 0 && aimdown)
             {
-                animation.Play("walk");
+                if (shoot1)
+                {
+                    animation.Play("Cfirecrouch");
+                }
+                else if (shoot2)
+                {
+                    animation.Play("Sfirecrouch");
+                }
+                else
+                {
+                    animation.Play("crouchwait");
+                }
             }
-            animation["walk"].speed = 1.5f;
+
+            if (jump)
+            {
+                if (shoot1)
+                {
+                    if (aimdown)
+                    {
+                        animation.Play("Sfiredownjump");
+                    } else
+                    {
+                        animation.Play("Sfirejump");
+                    }
+                }
+                else if (shoot2)
+                {
+                    if (aimdown)
+                    {
+                        animation.Play("Cfiredownjump");
+                    }
+                    else
+                    {
+                        animation.Play("Cfirejump");
+                    }
+                }
+                else
+                {
+                    if (aimdown)
+                    {
+                        animation.Play("aimdownjump");
+                    } else
+                    {
+                        animation.Play("jump");
+                        animation["jump"].speed = 1f;
+                    }
+                }  
+            }
+
+            if (fall)
+            {
+                animation.Play("fall");
+                animation["fall"].speed = 3f;
+            }
+
+            if (walk)
+            {
+                if (!animation.IsPlaying("fall") && !animation.IsPlaying("jump"))
+                {
+                    if (shoot1)
+                    {
+                        animation.Play("Cfirerun");
+                    }
+                    else if (shoot2)
+                    {
+                        animation.Play("Sfirerun");
+                    } else
+                    {
+                        animation.Play("run");
+                        animation["run"].speed = 0.8f;
+                    }
+                }
+            }
+            else if (!animation.IsPlaying("fall") && !animation.IsPlaying("jump") && !jump && !aimdown && !dead)
+            {
+                if (shoot1)
+                {
+                    animation.Play("Cfire");
+                }
+                else if (shoot2)
+                {
+                    animation.Play("Sfire");
+                }
+                else
+                {
+                    animation.Play("idle");
+                }
+            }
         }
         else
         {
-            if (!animation.IsPlaying("fall") && !animation.IsPlaying("jump"))
-            {
-                animation.Play("idle");
-            }
+            animation.Play("death");
+            animation["death"].speed = 0.8f;
         }
+        
 
         //check collectibles
         var posx = Mathf.RoundToInt(player.transform.position.x);
@@ -519,7 +602,6 @@ public class Main : MonoBehaviour {
     {
         foreach (Enemy enemy in enemys)
         {
-            
             var origx = enemy.OrigX;
             var origy = enemy.OrigY;
             var targetx = enemy.OrigX;
@@ -700,10 +782,13 @@ public class Main : MonoBehaviour {
 
     private void killPlayer()
     {
-        Debug.Log("death");
-        source.PlayOneShot(deathclip);
-        reloadLevel(0.5f);
+        if (!dead)
+        {
+            Debug.Log("death");
+            dead = true;
+            source.PlayOneShot(deathclip);
+            reloadLevel(0.8f);
+        }
+        
     }
-
-
 }

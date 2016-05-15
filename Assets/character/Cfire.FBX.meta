@@ -6,8 +6,44 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Head
+    100004: IK Chain001
+    100006: IK Chain002
+    100008: IK Chain003
+    100010: IK Chain004
+    100012: LeftArm
+    100014: LeftElbow
+    100016: LeftFoot
+    100018: LeftHand
+    100020: LeftKnee
+    100022: LeftLeg
+    100024: Pelvis
+    100026: RightArm
+    100028: RightElbow
+    100030: RightFoot
+    100032: RightHand
+    100034: RightKnee
+    100036: RightLeg
     400000: //RootNode
-    7400000: Take 001
+    400002: Head
+    400004: IK Chain001
+    400006: IK Chain002
+    400008: IK Chain003
+    400010: IK Chain004
+    400012: LeftArm
+    400014: LeftElbow
+    400016: LeftFoot
+    400018: LeftHand
+    400020: LeftKnee
+    400022: LeftLeg
+    400024: Pelvis
+    400026: RightArm
+    400028: RightElbow
+    400030: RightFoot
+    400032: RightHand
+    400034: RightKnee
+    400036: RightLeg
+    7400000: Cfire
     9500000: //RootNode
     11100000: //RootNode
   materials:
@@ -30,7 +66,37 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Cfire
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 10
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
