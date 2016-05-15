@@ -10,6 +10,10 @@ public class Main : MonoBehaviour {
     private Block[,] objects;
     private GameObject player;
     private List<Ball> balls;
+    private List<Enemy> enemys;
+
+    private AudioSource source;
+    public AudioClip deathclip;
 
     private float movespeed = 2f;
     private float vaccel = -16f;
@@ -18,30 +22,34 @@ public class Main : MonoBehaviour {
     private float bigJumpTime = 0.2f;
     private float turnTime = 0.1f;
     private float hitboxMargin = 0.12f;
-    private float ballspeed = 4f;
+    private float ballspeed = 5f;
     private float ballRadius = 0.15f;
     private float fallDeathHeight = 5f;
     private float jumpcooldowntime = 0.1f;
     private float shootcooldowntime = 0.3f;
+    private float spawnBlockTime = 0.0f;
 
     private List<Block> playerBlocks;
     private float playerVSpeed;
     private int playerDir = 1;
     private float fallHeight = 0;
-
-    private KeyCode jumpButton = KeyCode.Space;
+    private bool loadingLevel = false;
 
 
     private float jumptimer = 0;
     private float jumpcooldowntimer = 0;
     private float turntimer = 0;
     private float shootcooldowntimer = 0;
+    private float freezeMoveTimer = 0;
+    private float loadLevelTimer = 0;
 
     // Use this for initialization
     void Start () {
         blocks = new Block[mapsize, mapsize];
         objects = new Block[mapsize, mapsize];
+        enemys = new List<Enemy>();
         player = GameObject.FindGameObjectWithTag("Player");
+        source = GetComponent<AudioSource>();
         playerVSpeed = 0;
         fallHeight = 0;
 
@@ -74,6 +82,18 @@ public class Main : MonoBehaviour {
                     blocks[x, y].IsDestrutible = false;
                     blocks[x, y].IsFixed = false;
                 }
+                if (child.CompareTag("Kill"))
+                {
+                    blocks[x, y].IsDestrutible = false;
+                    blocks[x, y].IsFixed = true;
+                    blocks[x, y].IsKill = true;
+                }
+                if (child.CompareTag("Enemy"))
+                {
+                    var prm = child.GetComponent<Params>();
+                    Enemy enemy = new Enemy(child.gameObject, x, y, prm.deltaMove, prm.speed, prm.vertical);
+                    enemys.Add(enemy);
+                }
             }
         }
 
@@ -90,6 +110,8 @@ public class Main : MonoBehaviour {
         updateBlocks();
 
         updateBalls();
+
+        updateEnemys();
     }
 
     private void updatePlayer()
@@ -99,6 +121,8 @@ public class Main : MonoBehaviour {
         turntimer -= Time.deltaTime;
         jumpcooldowntimer -= Time.deltaTime;
         shootcooldowntimer -= Time.deltaTime;
+        freezeMoveTimer -= Time.deltaTime;
+        loadLevelTimer -= Time.deltaTime;
 
 
         var walk = false;
@@ -109,10 +133,11 @@ public class Main : MonoBehaviour {
 
         if (playerGroundDist() == 0)
         {
+            //check fall
             if (fallHeight - player.transform.position.y > fallDeathHeight)
             {
-                Debug.Log("death");
-                SceneManager.LoadScene("scene");
+                Debug.Log("fall death");
+                killPlayer();
             }
             if (fallHeight > 0)
             {
@@ -120,6 +145,14 @@ public class Main : MonoBehaviour {
                 jumpcooldowntimer = jumpcooldowntime;
             }
             fallHeight = 0;
+
+            //check lava
+            var x = Mathf.RoundToInt(player.transform.position.x);
+            var y = Mathf.RoundToInt(player.transform.position.y);
+            if (blocks[x, y - 1] != null && blocks[x, y - 1].IsKill)
+            {
+                killPlayer();
+            }
         } else
         {
             jump = true;
@@ -140,139 +173,128 @@ public class Main : MonoBehaviour {
         if (playerCeilingDist() == 0)
         {
             playerVSpeed = 0;
+
+            //check lava
+            var x = Mathf.RoundToInt(player.transform.position.x);
+            var y = Mathf.RoundToInt(player.transform.position.y);
+            if (blocks[x, y + 2] != null && blocks[x, y + 2].IsKill)
+            {
+                Debug.Log("lava death");
+                killPlayer();
+            }
         }
 
-        playerVSpeed += vaccel * Time.deltaTime;
-
-        if (playerVSpeed < -maxDropSpeed)
+        if (playerCeilingDist() < - 0.5f)
         {
-            playerVSpeed = -maxDropSpeed;
+            Debug.Log("head death");
+            //killPlayer();
         }
 
-        if (Input.GetAxis("Horizontal") > 0)
+
+        if (freezeMoveTimer < 0)
         {
-            walk = true;
-            if (playerDir < 0)
+            if (Input.GetAxis("Horizontal") > 0)
             {
-                playerDir = 1;
-                turntimer = turnTime;
-                player.transform.Rotate(0, 180, 0);
-            } else if (turntimer < 0)
-            {
-                player.transform.position = new Vector3(player.transform.position.x + movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
-                var x = Mathf.CeilToInt(player.transform.position.x);
-                var y1 = Mathf.FloorToInt(player.transform.position.y + hitboxMargin);
-                var y2 = Mathf.CeilToInt(player.transform.position.y - hitboxMargin);
-                if (blocks[x, y1] != null || blocks[x, y2] != null || blocks[x, y2 + 1] != null)
+                walk = true;
+                if (playerDir < 0)
                 {
-                    player.transform.position = new Vector3(x - 1, player.transform.position.y, player.transform.position.z);
+                    playerDir = 1;
+                    turntimer = turnTime;
+                    player.transform.Rotate(0, 180, 0);
+                } else if (turntimer < 0)
+                {
+                    player.transform.position = new Vector3(player.transform.position.x + movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
+                    var x = Mathf.CeilToInt(player.transform.position.x);
+                    var y1 = Mathf.FloorToInt(player.transform.position.y + hitboxMargin);
+                    var y2 = Mathf.CeilToInt(player.transform.position.y - hitboxMargin);
+                    if (blocks[x, y1] != null || blocks[x, y2] != null || blocks[x, y2 + 1] != null)
+                    {
+                        player.transform.position = new Vector3(x - 1, player.transform.position.y, player.transform.position.z);
+                    }
+                }
+            }
+
+            if (Input.GetAxis("Horizontal") < 0)
+            {
+                walk = true;
+                if (playerDir > 0)
+                {
+                    playerDir = -1;
+                    turntimer = turnTime;
+                    player.transform.Rotate(0, 180, 0);
+                }
+                else if (turntimer < 0)
+                {
+                    playerDir = -1;
+                    player.transform.position = new Vector3(player.transform.position.x - movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
+
+                    var x = Mathf.FloorToInt(player.transform.position.x);
+                    var y1 = Mathf.FloorToInt(player.transform.position.y + hitboxMargin);
+                    var y2 = Mathf.CeilToInt(player.transform.position.y - hitboxMargin);
+                    if (blocks[x, y1] != null || blocks[x, y2] != null || blocks[x, y2 + 1] != null)
+                    {
+                        player.transform.position = new Vector3(x + 1, player.transform.position.y, player.transform.position.z);
+                    }
+                }
+            }
+
+            playerVSpeed += vaccel * Time.deltaTime;
+
+            if (playerVSpeed < -maxDropSpeed)
+            {
+                playerVSpeed = -maxDropSpeed;
+            }
+
+            if (playerVSpeed > 0)
+            {
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
+
+                var y = Mathf.CeilToInt(player.transform.position.y);
+                var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
+                var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
+
+                if (blocks[x1, y + 1] != null || blocks[x2, y + 1] != null)
+                {
+                    player.transform.position = new Vector3(player.transform.position.x, y - 1, player.transform.position.z);
+                }
+            }
+
+            if (playerVSpeed < 0)
+            {
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
+
+                var y = Mathf.FloorToInt(player.transform.position.y);
+                var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
+                var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
+
+                if (blocks[x1, y] != null || blocks[x2, y] != null)
+                {
+                    player.transform.position = new Vector3(player.transform.position.x, y + 1, player.transform.position.z);
                 }
             }
         }
-
-        if (Input.GetAxis("Horizontal") < 0)
-        {
-            walk = true;
-            if (playerDir > 0)
-            {
-                playerDir = -1;
-                turntimer = turnTime;
-                player.transform.Rotate(0, 180, 0);
-            }
-            else if (turntimer < 0)
-            {
-                playerDir = -1;
-                player.transform.position = new Vector3(player.transform.position.x - movespeed * Time.deltaTime, player.transform.position.y, player.transform.position.z);
-
-                var x = Mathf.FloorToInt(player.transform.position.x);
-                var y1 = Mathf.FloorToInt(player.transform.position.y + hitboxMargin);
-                var y2 = Mathf.CeilToInt(player.transform.position.y - hitboxMargin);
-                if (blocks[x, y1] != null || blocks[x, y2] != null || blocks[x, y2 + 1] != null)
-                {
-                    player.transform.position = new Vector3(x + 1, player.transform.position.y, player.transform.position.z);
-                }
-            }
-        }
-
-        if (playerVSpeed > 0)
-        {
-            player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
-
-            var y = Mathf.CeilToInt(player.transform.position.y);
-            var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
-            var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
-            if (blocks[x1, y + 1] != null || blocks[x2, y + 1] != null)
-            {
-                player.transform.position = new Vector3(player.transform.position.x, y - 1, player.transform.position.z);
-            }
-        }
-
-        if (playerVSpeed < 0)
-        {
-            player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
-
-            var y = Mathf.FloorToInt(player.transform.position.y);
-            var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
-            var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
-            if (blocks[x1, y] != null || blocks[x2, y] != null)
-            {
-                player.transform.position = new Vector3(player.transform.position.x, y + 1, player.transform.position.z);
-            }
-        }
-
+        
         //action tir de block
         if (Input.GetAxis("Fire1") > 0 && shootcooldowntimer < 0)
         {
             shoot1 = true;
             shootcooldowntimer = shootcooldowntime;
-            if (playerGroundDist() > 0)
-            {
-                if (Input.GetAxis("Vertical") < 0)
-                {
-                    var x = Mathf.RoundToInt(player.transform.position.x);
-                    var y = Mathf.FloorToInt(player.transform.position.y);
-                    spawnPlayerBlock(x, y - 1);
-                }
-                else
-                {
-                    var x = Mathf.FloorToInt(player.transform.position.x);
-                    if (playerDir > 0)
-                    {
-                        x = Mathf.CeilToInt(player.transform.position.x);
-                    }
-                    var y = player.transform.position.y;
-                    spawnPlayerBlock(x + playerDir, y + 1);
-                }
-            } else
-            {
-                var x = Mathf.FloorToInt(player.transform.position.x);
-                if (playerDir > 0)
-                {
-                    x = Mathf.CeilToInt(player.transform.position.x);
-                }
-                if (Input.GetAxis("Vertical") < 0)
-                {
-                    var y = player.transform.position.y;
-                    spawnPlayerBlock(x + playerDir, y);
-                }
-                else
-                {
-                    var y = player.transform.position.y;
-                    spawnPlayerBlock(x + playerDir, y + 1);
-                }
-            }
-        }
-
-        //action tir de boule
-        if (Input.GetAxis("Fire2") > 0 && shootcooldowntimer < 0)
-        {
-            shoot2 = true;
-            shootcooldowntimer = shootcooldowntime;
             if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
             {
-                var x = player.transform.position.x;
-                var y = Mathf.FloorToInt(player.transform.position.y);
-                shootBall(x, y);
+                var x = Mathf.RoundToInt(player.transform.position.x);
+                var y = player.transform.position.y;
+                bool okSpawn = spawnPlayerBlock(x, y - 1);
+                if (spawnBlockTime > 0 && okSpawn)
+                {
+                    playerVSpeed = 0;
+                    freezeMoveTimer = spawnBlockTime;
+                }
+            }
+            else if (Input.GetAxis("Vertical") > 0)
+            {
+                /*var x = Mathf.RoundToInt(player.transform.position.x);
+                var y = player.transform.position.y + 1;
+                spawnPlayerBlock(x, y + 1.5f);*/
             } else
             {
                 var x = Mathf.FloorToInt(player.transform.position.x);
@@ -286,9 +308,42 @@ public class Main : MonoBehaviour {
                 {
                     y = y - 1;
                 }
-                shootBall(x, y + 1, playerDir);
+                spawnPlayerBlock(x + playerDir, y + 1);
             }
-                
+        }
+
+        //action tir de boule
+        if (Input.GetAxis("Fire2") > 0 && shootcooldowntimer < 0)
+        {
+            shoot2 = true;
+            shootcooldowntimer = shootcooldowntime;
+            if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
+            {
+                var x = player.transform.position.x;
+                var y = player.transform.position.y;
+                shootBall(x, y, -1, true);
+            }
+            else if (Input.GetAxis("Vertical") > 0)
+            {
+                var x = player.transform.position.x;
+                var y = player.transform.position.y + 1;
+                shootBall(x, y, 1, true);
+            }
+            else
+            {
+                var x = Mathf.FloorToInt(player.transform.position.x);
+                if (playerDir > 0)
+                {
+                    x = Mathf.CeilToInt(player.transform.position.x);
+                }
+                var y = player.transform.position.y;
+
+                if (Input.GetAxis("Vertical") < 0)
+                {
+                    y = y - 1;
+                }
+                shootBall(x, y + 1, playerDir, false);
+            }
         }
 
 
@@ -334,16 +389,22 @@ public class Main : MonoBehaviour {
         if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("End"))
         {
             Debug.Log("end");
-            SceneManager.LoadScene("scene");
+            reloadLevel(1f);
         }
 
         //mouvement camera
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
 
         //retry
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetButtonDown("Cancel"))
         {
-            SceneManager.LoadScene("scene");
+            reloadLevel(1f);
+        }
+
+        if (loadingLevel && loadLevelTimer < 0)
+        {
+            int scene = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(scene, LoadSceneMode.Single);
         }
     }
 
@@ -356,31 +417,37 @@ public class Main : MonoBehaviour {
                 if (blocks[i, j] != null && !blocks[i, j].IsFixed)
                 {
                     Block block = blocks[i, j];
-                    block.Vspeed += vaccel * Time.deltaTime;
+                    block.spawnTimer -= Time.deltaTime;
 
-                    if (block.Vspeed < -maxDropSpeed)
+                    if (block.spawnTimer < 0)
                     {
-                        block.Vspeed = -maxDropSpeed;
-                    }
+                        block.Vspeed += vaccel * Time.deltaTime;
 
-                    if (block.Vspeed < 0)
-                    {
-                        block.Obj.transform.position = new Vector3(block.Obj.transform.position.x, block.Obj.transform.position.y + block.Vspeed * Time.deltaTime, block.Obj.transform.position.z);
-
-                        var y = Mathf.FloorToInt(block.Obj.transform.position.y);
-                        var x = Mathf.RoundToInt(block.Obj.transform.position.x);
-                        
-                        if (y < block.Y)
+                        if (block.Vspeed < -maxDropSpeed)
                         {
-                            if (blocks[x, y] != null)
+                            block.Vspeed = -maxDropSpeed;
+                        }
+
+                        if (block.Vspeed < 0)
+                        {
+                            block.Obj.transform.position = new Vector3(block.Obj.transform.position.x, block.Obj.transform.position.y + block.Vspeed * Time.deltaTime, block.Obj.transform.position.z);
+
+                            var y = Mathf.FloorToInt(block.Obj.transform.position.y);
+                            var x = Mathf.RoundToInt(block.Obj.transform.position.x);
+
+                            if (y < block.Y)
                             {
-                                block.Obj.transform.position = new Vector3(block.Obj.transform.position.x, y + 1, block.Obj.transform.position.z);
-                            } else
-                            {
-                                blocks[block.X, block.Y] = null;
-                                blocks[x, y] = block;
-                                block.X = x;
-                                block.Y = y;
+                                if (blocks[x, y] != null)
+                                {
+                                    block.Obj.transform.position = new Vector3(block.Obj.transform.position.x, y + 1, block.Obj.transform.position.z);
+                                }
+                                else
+                                {
+                                    blocks[block.X, block.Y] = null;
+                                    blocks[x, y] = block;
+                                    block.X = x;
+                                    block.Y = y;
+                                }
                             }
                         }
                     }
@@ -400,7 +467,7 @@ public class Main : MonoBehaviour {
                 ball.Obj.transform.position = new Vector3(oldpos.x + ball.Speed * Time.deltaTime, oldpos.y, oldpos.z);
             } else
             {
-                ball.Obj.transform.position = new Vector3(oldpos.x, oldpos.y - ball.Speed * Time.deltaTime, oldpos.z);
+                ball.Obj.transform.position = new Vector3(oldpos.x, oldpos.y + ball.Speed * Time.deltaTime, oldpos.z);
             }
 
             var posx1 = Mathf.RoundToInt(ball.Obj.transform.position.x + ballRadius);
@@ -434,6 +501,8 @@ public class Main : MonoBehaviour {
             {
                 toDestroy.Add(ball);
             }
+
+
         }
 
         foreach (Ball ball in toDestroy)
@@ -443,13 +512,80 @@ public class Main : MonoBehaviour {
         }
     }
 
+    private void updateEnemys()
+    {
+        foreach (Enemy enemy in enemys)
+        {
+            
+            var origx = enemy.OrigX;
+            var origy = enemy.OrigY;
+            var targetx = enemy.OrigX;
+            var targety = enemy.OrigY;
+
+            if (enemy.IsVertical)
+            {
+                if (enemy.CurrentDir > 0)
+                {
+                    targety += enemy.DeltaMove;
+                }
+
+                var newy = enemy.Obj.transform.position.y + enemy.Speed * Time.deltaTime * Mathf.Sign(enemy.DeltaMove) * enemy.CurrentDir;
+                if (enemy.DeltaMove * enemy.CurrentDir > 0 && newy > targety)
+                {
+                    newy = targety;
+                    enemy.CurrentDir = -enemy.CurrentDir;
+                }
+                if (enemy.DeltaMove * enemy.CurrentDir < 0 && newy < targety)
+                {
+                    newy = targety;
+                    enemy.CurrentDir = -enemy.CurrentDir;
+                }
+
+                if (blocks[origx, Mathf.RoundToInt(newy + Mathf.Sign(enemy.DeltaMove * enemy.CurrentDir))] != null)
+                {
+                    //newy = Mathf.RoundToInt(newy);
+                    enemy.CurrentDir = -enemy.CurrentDir;
+                }
+
+
+                enemy.Obj.transform.position = new Vector3(enemy.Obj.transform.position.x, newy, enemy.Obj.transform.position.z);
+            } else
+            {
+                if (enemy.CurrentDir > 0)
+                {
+                    targetx += enemy.DeltaMove;
+                }
+
+                var newx = enemy.Obj.transform.position.x + enemy.Speed * Time.deltaTime * Mathf.Sign(enemy.DeltaMove) * enemy.CurrentDir;
+                if (enemy.DeltaMove * enemy.CurrentDir > 0 && newx > targetx)
+                {
+                    newx = targetx;
+                    enemy.CurrentDir = -enemy.CurrentDir;
+                }
+                if (enemy.DeltaMove * enemy.CurrentDir < 0 && newx < targetx)
+                {
+                    newx = targetx;
+                    enemy.CurrentDir = -enemy.CurrentDir;
+                }
+
+                if (blocks[origy, Mathf.RoundToInt(newx + Mathf.Sign(enemy.DeltaMove * enemy.CurrentDir))] != null)
+                {
+                    //newx = Mathf.RoundToInt(newx);
+                    enemy.CurrentDir = -enemy.CurrentDir;
+                }
+
+                enemy.Obj.transform.position = new Vector3(newx, enemy.Obj.transform.position.y, enemy.Obj.transform.position.z);
+            }
+        }
+    }
+
     private float playerGroundDist()
     {
         var y = Mathf.FloorToInt(player.transform.position.y);
         var dist = player.transform.position.y - y;
 
-        var x1 = Mathf.FloorToInt(player.transform.position.x);
-        var x2 = Mathf.CeilToInt(player.transform.position.x);
+        var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
+        var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
 
         int i = 1;
         while (y - i > 0 && blocks[x1, y - i] == null && blocks[x2, y - i] == null)
@@ -466,8 +602,8 @@ public class Main : MonoBehaviour {
         var y = Mathf.CeilToInt(player.transform.position.y);
         var dist = y - player.transform.position.y;
 
-        var x1 = Mathf.FloorToInt(player.transform.position.x);
-        var x2 = Mathf.CeilToInt(player.transform.position.x);
+        var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
+        var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
 
         int i = 1;
         while (y + i < mapsize && blocks[x1, y + i] == null && blocks[x2, y + i] == null)
@@ -483,8 +619,9 @@ public class Main : MonoBehaviour {
     {
         int x2 = Mathf.RoundToInt(x);
         int y2 = Mathf.FloorToInt(y);
+        int y3 = Mathf.CeilToInt(y);
 
-        if (blocks[x2, y2] == null)
+        if (blocks[x2, y2] == null && blocks[x2, y3] == null)
         {
             GameObject obj = (GameObject)Instantiate(Resources.Load("prefabs/caisse_orange"), new Vector3(x2, y, 0), Quaternion.identity);
             Block b = new Block(obj, x2, y2);
@@ -496,12 +633,13 @@ public class Main : MonoBehaviour {
         return null;
     }
 
-    private void spawnPlayerBlock(float x, float y)
+    private bool spawnPlayerBlock(float x, float y)
     {
         Block block = spawnBlock(x, y);
 
         if (block != null)
         {
+            block.spawnTimer = spawnBlockTime;
             block.IsDestrutible = true;
             playerBlocks.Add(block);
             if (playerBlocks.Count > 3)
@@ -510,21 +648,16 @@ public class Main : MonoBehaviour {
                 playerBlocks.RemoveAt(0);
                 removeBlock(removed);
             }
+            return true;
         }
+        return false;
     }
 
-    private void shootBall(float x, float y, float dir)
+    private void shootBall(float x, float y, float dir, bool vert)
     {
         GameObject obj = (GameObject)Instantiate(Resources.Load("Ball"), new Vector3(x, y, 0), Quaternion.identity);
         Ball ball = new Ball(obj, ballspeed * dir);
-        balls.Add(ball);
-    }
-
-    private void shootBall(float x, float y)
-    {
-        GameObject obj = (GameObject)Instantiate(Resources.Load("Ball"), new Vector3(x, y, 0), Quaternion.identity);
-        Ball ball = new Ball(obj, ballspeed);
-        ball.Vertical = true;
+        ball.Vertical = vert;
         balls.Add(ball);
     }
 
@@ -534,7 +667,6 @@ public class Main : MonoBehaviour {
         if (x < 0 || x >= mapsize || y < 0 || y >= mapsize)
         {
             res = true;
-
         }
         else if (blocks[x, y] != null)
         {
@@ -553,6 +685,19 @@ public class Main : MonoBehaviour {
         Destroy(block.Obj);
         blocks[block.X, block.Y] = null;
         playerBlocks.Remove(block);
+    }
+
+    private void reloadLevel(float delay)
+    {
+        loadingLevel = true;
+        loadLevelTimer = delay;
+    }
+
+    private void killPlayer()
+    {
+        Debug.Log("death");
+        source.PlayOneShot(deathclip);
+        reloadLevel(1f);
     }
 
 

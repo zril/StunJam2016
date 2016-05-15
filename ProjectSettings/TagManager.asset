@@ -10,6 +10,8 @@ TagManager:
   - Destructible
   - FixedDestructible
   - Indestructible
+  - Kill
+  - Enemy
   layers:
   - Default
   - TransparentFX

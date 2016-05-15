@@ -9,7 +9,9 @@ class Block
     public GameObject Obj { get; set; }
     public bool IsFixed { get; set; }
     public bool IsDestrutible { get; set; }
+    public bool IsKill { get; set; }
     public float Vspeed { get; set; }
+    public float spawnTimer { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
 
@@ -18,7 +20,9 @@ class Block
         Obj = obj;
         IsFixed = true;
         IsDestrutible = false;
+        IsKill = false;
         X = x;
         Y = y;
+        spawnTimer = 0;
     }
 }
