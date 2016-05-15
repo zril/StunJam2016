@@ -14,6 +14,8 @@ public class Main : MonoBehaviour {
 
     private AudioSource source;
     public AudioClip deathclip;
+    public AudioClip winclip;
+    public AudioClip music;
 
     private float movespeed = 2.5f;
     private float vaccel = -18f;
@@ -54,7 +56,8 @@ public class Main : MonoBehaviour {
         playerVSpeed = 0;
         fallHeight = 0;
 
-
+        source.PlayOneShot(music);
+        source.loop = true;
         var world = GameObject.FindGameObjectWithTag("World");
         foreach (Transform child in world.transform)
         {
@@ -476,6 +479,7 @@ public class Main : MonoBehaviour {
             porteAnim.Play();
             Debug.Log("end");
             reloadLevel(0.5f);
+            source.PlayOneShot(winclip);
         }
 
         //mouvement camera
