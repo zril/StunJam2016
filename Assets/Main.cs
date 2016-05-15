@@ -21,7 +21,7 @@ public class Main : MonoBehaviour {
     private float jumpSpeed = 5f;
     private float bigJumpTime = 0.2f;
     private float turnTime = 0.1f;
-    private float hitboxMargin = 0.12f;
+    private float hitboxMargin = 0.15f;
     private float ballspeed = 5f;
     private float ballRadius = 0.15f;
     private float fallDeathHeight = 5f;
@@ -297,10 +297,10 @@ public class Main : MonoBehaviour {
                 spawnPlayerBlock(x, y + 1.5f);*/
             } else
             {
-                var x = Mathf.FloorToInt(player.transform.position.x);
+                var x = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
                 if (playerDir > 0)
                 {
-                    x = Mathf.CeilToInt(player.transform.position.x);
+                    x = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
                 }
                 var y = player.transform.position.y;
 
