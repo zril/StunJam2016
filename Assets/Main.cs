@@ -126,13 +126,13 @@ public class Main : MonoBehaviour {
             fallHeight = Mathf.Max(fallHeight, player.transform.position.y);
         }
 
-        if (Input.GetKey(jumpButton) && playerGroundDist() == 0 && playerCeilingDist() > 0 && jumpcooldowntimer < 0)
+        if (Input.GetButton("Jump") && playerGroundDist() == 0 && playerCeilingDist() > 0 && jumpcooldowntimer < 0)
         {
             playerVSpeed = jumpSpeed;
             jumptimer = bigJumpTime;
         }
 
-        if (Input.GetKey(jumpButton) && jumptimer > 0)
+        if (Input.GetButton("Jump") && jumptimer > 0)
         {
             playerVSpeed = jumpSpeed;
         }
@@ -149,7 +149,7 @@ public class Main : MonoBehaviour {
             playerVSpeed = -maxDropSpeed;
         }
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetAxis("Horizontal") > 0)
         {
             walk = true;
             if (playerDir < 0)
@@ -170,7 +170,7 @@ public class Main : MonoBehaviour {
             }
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetAxis("Horizontal") < 0)
         {
             walk = true;
             if (playerDir > 0)
@@ -221,13 +221,13 @@ public class Main : MonoBehaviour {
         }
 
         //action tir de block
-        if (Input.GetKey(KeyCode.E) && shootcooldowntimer < 0)
+        if (Input.GetAxis("Fire1") > 0 && shootcooldowntimer < 0)
         {
             shoot1 = true;
             shootcooldowntimer = shootcooldowntime;
             if (playerGroundDist() > 0)
             {
-                if (Input.GetKey(KeyCode.DownArrow))
+                if (Input.GetAxis("Vertical") < 0)
                 {
                     var x = Mathf.RoundToInt(player.transform.position.x);
                     var y = Mathf.FloorToInt(player.transform.position.y);
@@ -250,7 +250,7 @@ public class Main : MonoBehaviour {
                 {
                     x = Mathf.CeilToInt(player.transform.position.x);
                 }
-                if (Input.GetKey(KeyCode.DownArrow))
+                if (Input.GetAxis("Vertical") < 0)
                 {
                     var y = player.transform.position.y;
                     spawnPlayerBlock(x + playerDir, y);
@@ -264,11 +264,11 @@ public class Main : MonoBehaviour {
         }
 
         //action tir de boule
-        if (Input.GetKey(KeyCode.R) && shootcooldowntimer < 0)
+        if (Input.GetAxis("Fire2") > 0 && shootcooldowntimer < 0)
         {
             shoot2 = true;
             shootcooldowntimer = shootcooldowntime;
-            if (playerGroundDist() > 0 && Input.GetKey(KeyCode.DownArrow))
+            if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
             {
                 var x = player.transform.position.x;
                 var y = Mathf.FloorToInt(player.transform.position.y);
@@ -282,7 +282,7 @@ public class Main : MonoBehaviour {
                 }
                 var y = player.transform.position.y;
 
-                if (Input.GetKey(KeyCode.DownArrow))
+                if (Input.GetAxis("Vertical") < 0)
                 {
                     y = y - 1;
                 }
