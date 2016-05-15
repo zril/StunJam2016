@@ -15,9 +15,9 @@ public class Main : MonoBehaviour {
     private AudioSource source;
     public AudioClip deathclip;
 
-    private float movespeed = 2f;
-    private float vaccel = -16f;
-    private float maxDropSpeed = 4f;
+    private float movespeed = 2.5f;
+    private float vaccel = -18f;
+    private float maxDropSpeed = 4.5f;
     private float jumpSpeed = 5f;
     private float bigJumpTime = 0.2f;
     private float turnTime = 0.1f;
