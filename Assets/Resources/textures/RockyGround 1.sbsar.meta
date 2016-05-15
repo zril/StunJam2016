@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 4c3c4b34e8bc51d478ddf212428c9be1
-timeCreated: 1463265325
+timeCreated: 1463313874
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -242,7 +242,7 @@ SubstanceImporter:
             name: _MainTex
           second:
             texture: {instanceID: 0}
-            scale: {x: 30, y: 30}
+            scale: {x: 10, y: 10}
             offset: {x: 1.96, y: 0}
         data:
           first:
@@ -277,7 +277,7 @@ SubstanceImporter:
             name: _EmissionMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 30, y: 30}
+            scale: {x: 10, y: 10}
             offset: {x: 1.96, y: 0}
         data:
           first:
@@ -429,7 +429,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 1.08, y: 0}
-      scale: {x: 1, y: 1}
+      scale: {x: 5, y: 5}
       generateMipmaps: 1
       generateAllOutputs: 1
       animationUpdateRate: 42
@@ -441,15 +441,15 @@ SubstanceImporter:
             name: _MainTex
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 5, y: 5}
             offset: {x: 1.08, y: 0}
         data:
           first:
             name: _BumpMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 1.05, y: 0}
+            scale: {x: 5, y: 1}
+            offset: {x: 1.08, y: 0}
         data:
           first:
             name: _DetailNormalMap
@@ -462,21 +462,21 @@ SubstanceImporter:
             name: _ParallaxMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 1.05, y: 0}
+            scale: {x: 5, y: 1}
+            offset: {x: 1.08, y: 0}
         data:
           first:
             name: _OcclusionMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 1.05, y: 0}
+            scale: {x: 5, y: 1}
+            offset: {x: 1.08, y: 0}
         data:
           first:
             name: _EmissionMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 5, y: 5}
             offset: {x: 1.08, y: 0}
         data:
           first:
