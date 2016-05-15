@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 4c3c4b34e8bc51d478ddf212428c9be1
-timeCreated: 1463313874
+timeCreated: 1463322282
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -10,7 +10,7 @@ SubstanceImporter:
     prototypeName: Stones
     shaderName: 
     shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-    shaderKeywords: _NORMALMAP _PARALLAXMAP
+    shaderKeywords: _NORMALMAP
     renderQueue: -1
     lightmapFlags: 5
     inputs:
@@ -158,7 +158,7 @@ SubstanceImporter:
         data:
           first:
             name: _Color
-          second: {r: 0.33088237, g: 0.28114936, b: 0.19220373, a: 1}
+          second: {r: 0.13235295, g: 0.12711789, b: 0.1177552, a: 1}
     textureParameters:
     - name: Stones_basecolor
       alphaSource: 6
@@ -184,7 +184,7 @@ SubstanceImporter:
     - shaderProp:
         name: _MainTex
       material: {instanceID: 0}
-      baseUID: 2206107538
+      baseUID: 2206107536
     - shaderProp:
         name: _BumpMap
       material: {instanceID: 0}
@@ -200,8 +200,8 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 512
-      textureHeight: 512
+      textureWidth: 32
+      textureHeight: 32
       textureFormat: 0
       loadingBehavior: 1
   - serializedVersion: 16
@@ -633,7 +633,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 1.67, y: 0}
-      scale: {x: 1, y: 1}
+      scale: {x: 5, y: 5}
       generateMipmaps: 1
       generateAllOutputs: 0
       animationUpdateRate: 42
@@ -645,15 +645,15 @@ SubstanceImporter:
             name: _MainTex
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 0, y: 0}
+            scale: {x: 5, y: 5}
+            offset: {x: 1.67, y: 0}
         data:
           first:
             name: _BumpMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 0, y: 0}
+            scale: {x: 5, y: 1}
+            offset: {x: 1.67, y: 0}
         data:
           first:
             name: _DetailNormalMap
@@ -666,22 +666,22 @@ SubstanceImporter:
             name: _ParallaxMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 0, y: 0}
+            scale: {x: 5, y: 1}
+            offset: {x: 1.67, y: 0}
         data:
           first:
             name: _OcclusionMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 0, y: 0}
+            scale: {x: 5, y: 1}
+            offset: {x: 1.67, y: 0}
         data:
           first:
             name: _EmissionMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 0, y: 0}
+            scale: {x: 5, y: 5}
+            offset: {x: 1.67, y: 0}
         data:
           first:
             name: _DetailMask
@@ -786,7 +786,7 @@ SubstanceImporter:
     - shaderProp:
         name: _MainTex
       material: {instanceID: 0}
-      baseUID: 2206107538
+      baseUID: 2206107536
     - shaderProp:
         name: _BumpMap
       material: {instanceID: 0}
@@ -802,10 +802,10 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 512
-      textureHeight: 512
+      textureWidth: 32
+      textureHeight: 32
       textureFormat: 0
-      loadingBehavior: 1
+      loadingBehavior: 2
   deletedPrototypes: []
   userData: 
   assetBundleName: 
