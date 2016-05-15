@@ -388,8 +388,11 @@ public class Main : MonoBehaviour {
         var posy = Mathf.RoundToInt(player.transform.position.y);
         if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("End"))
         {
+            var porteAnim = objects[posx, posy].Obj.GetComponent<Animation>();
+            porteAnim["Take 001"].speed = 0.5f;
+            porteAnim.Play();
             Debug.Log("end");
-            reloadLevel(1f);
+            reloadLevel(0.5f);
         }
 
         //mouvement camera
@@ -655,7 +658,9 @@ public class Main : MonoBehaviour {
 
     private void shootBall(float x, float y, float dir, bool vert)
     {
-        GameObject obj = (GameObject)Instantiate(Resources.Load("Ball"), new Vector3(x, y, 0), Quaternion.identity);
+        GameObject obj = (GameObject)Instantiate(Resources.Load("prefabs/ball_anim"), new Vector3(x, y, 0), Quaternion.Euler(new Vector3(-90f, 135f, 0f)));
+        var porteAnim = obj.GetComponent<Animation>();
+        porteAnim["Take 001"].speed = 3f;
         Ball ball = new Ball(obj, ballspeed * dir);
         ball.Vertical = vert;
         balls.Add(ball);
@@ -697,7 +702,7 @@ public class Main : MonoBehaviour {
     {
         Debug.Log("death");
         source.PlayOneShot(deathclip);
-        reloadLevel(1f);
+        reloadLevel(0.5f);
     }
 
 
