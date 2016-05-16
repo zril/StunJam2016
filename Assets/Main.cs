@@ -37,6 +37,8 @@ public class Main : MonoBehaviour {
     private float fallHeight = 0;
     private bool loadingLevel = false;
     private bool dead = false;
+    private bool reseting = false;
+    private bool restarting = false;
     private int nextLoadlevel = 0;
 
 
@@ -502,18 +504,36 @@ public class Main : MonoBehaviour {
         //retry
         if (Input.GetButtonDown("Cancel"))
         {
-            loadLevel(0.2f, false);
+            restarting = true;
+            loadLevel(0.5f, false);
+            nextLoadlevel = SceneManager.GetActiveScene().buildIndex;
         }
 
         if (Input.GetButtonDown("Start"))
         {
-            loadLevel(0.2f, false);
+            reseting = true;
+            loadLevel(1f, false);
             nextLoadlevel = 0;
         }
 
         if (loadingLevel && loadLevelTimer < 0)
         {
-            SceneManager.LoadScene(nextLoadlevel, LoadSceneMode.Single);
+            loadingLevel = false;
+            var reload = true;
+            if (restarting && !Input.GetButton("Cancel"))
+            {
+                reload = false;
+                restarting = false;
+            }
+            if (reseting && !Input.GetButton("Start"))
+            {
+                reload = false;
+                reseting = false;
+            }
+            if (reload)
+            {
+                SceneManager.LoadScene(nextLoadlevel, LoadSceneMode.Single);
+            }
         }
     }
 
@@ -819,6 +839,7 @@ public class Main : MonoBehaviour {
             dead = true;
             source.PlayOneShot(deathclip);
             loadLevel(0.8f, false);
+            nextLoadlevel = SceneManager.GetActiveScene().buildIndex;
         }
         
     }
