@@ -23,7 +23,7 @@ public class Main : MonoBehaviour {
     private float jumpSpeed = 5f;
     private float bigJumpTime = 0.2f;
     private float turnTime = 0.1f;
-    private float hitboxMargin = 0.15f;
+    private float hitboxMargin = 0.20f;
     private float ballspeed = 6f;
     private float ballRadius = 0.15f;
     private float fallDeathHeight = 5f;
