@@ -199,7 +199,7 @@ public class Main : MonoBehaviour {
 
         if (freezeMoveTimer < 0)
         {
-            if (!(playerGroundDist() == 0 && Input.GetAxis("Vertical") < -0.25f))
+            if (!(playerGroundDist() == 0 && Input.GetAxis("Vertical") < 0))
             {
                 if (Input.GetAxis("Horizontal") > 0)
                 {
@@ -288,7 +288,7 @@ public class Main : MonoBehaviour {
         if (Input.GetAxis("Fire1") > 0 && shootcooldowntimer < 0)
         {
             shootcooldowntimer = shootcooldowntime;
-            if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < -0.25f)
+            if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
             {
                 var x = Mathf.RoundToInt(player.transform.position.x);
                 var y = player.transform.position.y;
@@ -325,7 +325,7 @@ public class Main : MonoBehaviour {
         if (Input.GetAxis("Fire2") > 0 && shootcooldowntimer < 0 && balls.Count < 5)
         {
             shootcooldowntimer = shootcooldowntime;
-            if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < -0.25f)
+            if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
             {
                 var x = player.transform.position.x;
                 var y = player.transform.position.y;
@@ -357,7 +357,7 @@ public class Main : MonoBehaviour {
         //animation
 
         var aimdown = false;
-        if (Input.GetAxis("Vertical") < -0.25f)
+        if (Input.GetAxis("Vertical") < 0)
         {
             aimdown = true;
         }
