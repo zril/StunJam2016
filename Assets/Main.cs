@@ -165,7 +165,7 @@ public class Main : MonoBehaviour {
             fallHeight = Mathf.Max(fallHeight, player.transform.position.y);
         }
 
-        if (Input.GetButton("Jump") && playerGroundDist() == 0 && playerCeilingDist() > 0 && jumpcooldowntimer < 0)
+        if (Input.GetButton("Jump") && playerGroundDist() == 0 && playerCeilingDist() > 0 && jumpcooldowntimer < 0 && !dead)
         {
             playerVSpeed = jumpSpeed;
             jumptimer = bigJumpTime;
