@@ -16,6 +16,10 @@ public class Main : MonoBehaviour {
     public AudioClip deathclip;
     public AudioClip winclip;
     public AudioClip music;
+    public AudioClip boxdeathclip;
+    public AudioClip jumpclip;
+    public AudioClip shoot1clip;
+    public AudioClip shoot2clip;
 
     private float movespeed = 2.5f;
     private float vaccel = -18f;
@@ -176,6 +180,7 @@ public class Main : MonoBehaviour {
         {
             playerVSpeed = jumpSpeed;
             jumptimer = bigJumpTime;
+            source.PlayOneShot(jumpclip);
         }
 
         if (Input.GetButton("Jump") && jumptimer > 0)
@@ -295,6 +300,7 @@ public class Main : MonoBehaviour {
         if (Input.GetAxis("Fire1") > 0 && shootcooldowntimer < 0)
         {
             shootcooldowntimer = shootcooldowntime;
+            source.PlayOneShot(shoot1clip);
             if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
             {
                 var x = Mathf.RoundToInt(player.transform.position.x);
@@ -332,6 +338,7 @@ public class Main : MonoBehaviour {
         if (Input.GetAxis("Fire2") > 0 && shootcooldowntimer < 0 && balls.Count < 5)
         {
             shootcooldowntimer = shootcooldowntime;
+            source.PlayOneShot(shoot2clip);
             if (playerGroundDist() > 0 && Input.GetAxis("Vertical") < 0)
             {
                 var x = player.transform.position.x;
@@ -838,6 +845,7 @@ public class Main : MonoBehaviour {
         Destroy(block.Obj);
         blocks[block.X, block.Y] = null;
         playerBlocks.Remove(block);
+        source.PlayOneShot(boxdeathclip);
     }
 
     private void loadLevel(float delay, bool next)

@@ -167,8 +167,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathclip: {fileID: 8300000, guid: eba3eae42e661c141a9c425f8bd232a2, type: 3}
-  winclip: {fileID: 0}
+  winclip: {fileID: 8300000, guid: 196df45facf54ec43884e99bc0cb19ba, type: 3}
   music: {fileID: 0}
+  boxdeathclip: {fileID: 8300000, guid: 6e5c2144519b9d94ea97a59ae3ca9e72, type: 3}
+  jumpclip: {fileID: 8300000, guid: 87b6c289d7d9fbc43a2878c5cb20499c, type: 3}
+  shoot1clip: {fileID: 8300000, guid: a5eb00c2fee9c814fa220b0a0a197a2b, type: 3}
+  shoot2clip: {fileID: 8300000, guid: a5eb00c2fee9c814fa220b0a0a197a2b, type: 3}
 --- !u!124 &12484762
 Behaviour:
   m_ObjectHideFlags: 1
