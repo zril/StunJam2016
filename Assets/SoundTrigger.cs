@@ -4,6 +4,8 @@ using System.Collections;
 public class SoundTrigger : MonoBehaviour {
 
     public AudioClip sound;
+    public bool playOnce = true;
+    private bool played = false;
 
     // Use this for initialization
     void Start () {
@@ -14,4 +16,14 @@ public class SoundTrigger : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public bool Play()
+    {
+        bool play = !played;
+        if (playOnce)
+        {
+            played = true;
+        }
+        return play;
+    }
 }

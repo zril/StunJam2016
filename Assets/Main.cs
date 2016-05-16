@@ -504,8 +504,12 @@ public class Main : MonoBehaviour {
             if (!soundTrigger)
             {
                 var clip = objects[posx, posy].Obj.GetComponent<SoundTrigger>().sound;
-                source.PlayOneShot(clip);
-                soundTrigger = true;
+                bool doplay = objects[posx, posy].Obj.GetComponent<SoundTrigger>().Play();
+                if (doplay)
+                {
+                    source.PlayOneShot(clip);
+                    soundTrigger = true;
+                }
             }
         } else
         {
