@@ -37,6 +37,7 @@ public class Main : MonoBehaviour {
     private float fallHeight = 0;
     private bool loadingLevel = false;
     private bool dead = false;
+    private int nextlevel = 1;
 
 
     private float jumptimer = 0;
@@ -55,6 +56,7 @@ public class Main : MonoBehaviour {
         source = GetComponent<AudioSource>();
         playerVSpeed = 0;
         fallHeight = 0;
+        nextlevel = SceneManager.GetActiveScene().buildIndex;
 
         source.PlayOneShot(music);
         source.loop = true;
@@ -490,7 +492,7 @@ public class Main : MonoBehaviour {
         if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("End"))
         {
             Debug.Log("end");
-            reloadLevel(0.5f);
+            loadLevel(0.5f, true);
             source.PlayOneShot(winclip);
         }
 
@@ -500,13 +502,12 @@ public class Main : MonoBehaviour {
         //retry
         if (Input.GetButtonDown("Cancel"))
         {
-            reloadLevel(1f);
+            loadLevel(0.2f, false);
         }
 
         if (loadingLevel && loadLevelTimer < 0)
         {
-            int scene = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(scene, LoadSceneMode.Single);
+            SceneManager.LoadScene(nextlevel, LoadSceneMode.Single);
         }
     }
 
@@ -794,10 +795,17 @@ public class Main : MonoBehaviour {
         playerBlocks.Remove(block);
     }
 
-    private void reloadLevel(float delay)
+    private void loadLevel(float delay, bool next)
     {
         loadingLevel = true;
         loadLevelTimer = delay;
+        if (next)
+        {
+            nextlevel = SceneManager.GetActiveScene().buildIndex + 1;
+        } else
+        {
+            nextlevel = SceneManager.GetActiveScene().buildIndex;
+        }
     }
 
     private void killPlayer()
@@ -807,7 +815,7 @@ public class Main : MonoBehaviour {
             Debug.Log("death");
             dead = true;
             source.PlayOneShot(deathclip);
-            reloadLevel(0.8f);
+            loadLevel(0.8f, false);
         }
         
     }

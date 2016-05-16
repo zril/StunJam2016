@@ -3342,6 +3342,10 @@ Prefab:
       propertyPath: m_Name
       value: lava_cube (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 176066, guid: 2bfc22129551bc74d8f116e97c600796, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2bfc22129551bc74d8f116e97c600796, type: 2}
   m_IsPrefabParent: 0
@@ -4764,6 +4768,10 @@ Prefab:
       propertyPath: m_Name
       value: lava_cube (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 176066, guid: 2bfc22129551bc74d8f116e97c600796, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2bfc22129551bc74d8f116e97c600796, type: 2}
   m_IsPrefabParent: 0
@@ -5259,6 +5267,10 @@ Prefab:
     - target: {fileID: 490438, guid: 2bfc22129551bc74d8f116e97c600796, type: 2}
       propertyPath: m_RootOrder
       value: 215
+      objectReference: {fileID: 0}
+    - target: {fileID: 176066, guid: 2bfc22129551bc74d8f116e97c600796, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2bfc22129551bc74d8f116e97c600796, type: 2}
