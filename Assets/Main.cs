@@ -502,9 +502,12 @@ public class Main : MonoBehaviour {
         }
         if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("End"))
         {
+            if (!loadingLevel)
+            {
+                source.PlayOneShot(winclip);
+            }
             Debug.Log("end");
-            loadLevel(0.5f, true);
-            source.PlayOneShot(winclip);
+            loadLevel(1f, true);
         }
         if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("SoundTrigger"))
         {
