@@ -505,7 +505,7 @@ public class Main : MonoBehaviour {
             loadLevel(0.2f, false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetButtonDown("Start"))
         {
             loadLevel(0.2f, false);
             nextLoadlevel = 0;
