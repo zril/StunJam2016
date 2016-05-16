@@ -787,6 +787,7 @@ public class Main : MonoBehaviour {
         {
             block.spawnTimer = spawnBlockTime;
             block.IsDestrutible = true;
+            block.Vspeed = playerVSpeed;
             playerBlocks.Add(block);
             if (playerBlocks.Count > 3)
             {
