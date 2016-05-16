@@ -40,6 +40,7 @@ public class Main : MonoBehaviour {
     private bool reseting = false;
     private bool restarting = false;
     private int nextLoadlevel = 0;
+    private bool soundTrigger = false;
 
 
     private float jumptimer = 0;
@@ -72,7 +73,11 @@ public class Main : MonoBehaviour {
             if (child.CompareTag("End"))
             {
                 objects[x, y] = new Block(child.gameObject, x, y);
-            } else
+            } else if (child.CompareTag("SoundTrigger"))
+            {
+                objects[x, y] = new Block(child.gameObject, x, y);
+            }
+            else
             {
                 blocks[x, y] = new Block(child.gameObject, x, y);
                 if (child.CompareTag("Destructible"))
@@ -473,9 +478,7 @@ public class Main : MonoBehaviour {
         }
 
 
-        //check collectibles
-        
-
+        //check triggers
         var posx = Mathf.RoundToInt(player.transform.position.x);
         var posy = Mathf.RoundToInt(player.transform.position.y);
         if (objects[posx + 1, posy] != null && objects[posx + 1, posy].Obj.CompareTag("End"))
@@ -490,12 +493,23 @@ public class Main : MonoBehaviour {
             porteAnim.Play();
             porteAnim["Take 001"].speed = 0.5f;
         }
-
         if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("End"))
         {
             Debug.Log("end");
             loadLevel(0.5f, true);
             source.PlayOneShot(winclip);
+        }
+        if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("SoundTrigger"))
+        {
+            if (!soundTrigger)
+            {
+                var clip = objects[posx, posy].Obj.GetComponent<SoundTrigger>().sound;
+                source.PlayOneShot(clip);
+                soundTrigger = true;
+            }
+        } else
+        {
+            soundTrigger = false;
         }
 
         //mouvement camera
@@ -823,11 +837,14 @@ public class Main : MonoBehaviour {
 
     private void loadLevel(float delay, bool next)
     {
-        loadingLevel = true;
-        loadLevelTimer = delay;
-        if (next)
+        if (!loadingLevel)
         {
-            nextLoadlevel = SceneManager.GetActiveScene().buildIndex + 1;
+            loadingLevel = true;
+            loadLevelTimer = delay;
+            if (next)
+            {
+                nextLoadlevel = SceneManager.GetActiveScene().buildIndex + 1;
+            }
         }
     }
 

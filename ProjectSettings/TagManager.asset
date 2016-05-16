@@ -12,6 +12,7 @@ TagManager:
   - Indestructible
   - Kill
   - Enemy
+  - SoundTrigger
   layers:
   - Default
   - TransparentFX
