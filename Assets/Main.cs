@@ -574,6 +574,11 @@ public class Main : MonoBehaviour {
             if (reload)
             {
                 SceneManager.LoadScene(nextLoadlevel, LoadSceneMode.Single);
+                if (reseting)
+                {
+                    var musicsource = GameObject.FindGameObjectWithTag("AudioSource");
+                    Destroy(musicsource);
+                }
             }
         }
     }
