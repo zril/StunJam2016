@@ -201,7 +201,7 @@ public class Main : MonoBehaviour {
         {
             if (!(playerGroundDist() == 0 && Input.GetAxis("Vertical") < 0))
             {
-                if (Input.GetAxis("Horizontal") > 0)
+                if (Input.GetAxis("Horizontal") > 0 && !dead)
                 {
                     walk = true;
                     if (playerDir < 0)
@@ -223,7 +223,7 @@ public class Main : MonoBehaviour {
                     }
                 }
 
-                if (Input.GetAxis("Horizontal") < 0)
+                if (Input.GetAxis("Horizontal") < 0 && !dead)
                 {
                     walk = true;
                     if (playerDir > 0)
