@@ -33,7 +33,6 @@ public class Main : MonoBehaviour {
     private float fallDeathHeight = 5f;
     private float jumpcooldowntime = 0.1f;
     private float shootcooldowntime = 0.3f;
-    private float spawnBlockTime = 0.0f;
 
     private List<Block> playerBlocks;
     private float playerVSpeed;
@@ -43,6 +42,7 @@ public class Main : MonoBehaviour {
     private bool dead = false;
     private bool reseting = false;
     private bool restarting = false;
+    private bool crouch = false;
     private int nextLoadlevel = 0;
     private bool soundTrigger = false;
 
@@ -202,7 +202,7 @@ public class Main : MonoBehaviour {
             }
         }
 
-        if (playerCeilingDist() < - 0.5f)
+        if (playerCeilingDist() < -0.5f)
         {
             Debug.Log("head death");
             //killPlayer();
@@ -295,7 +295,7 @@ public class Main : MonoBehaviour {
                 }
             }
         }
-        
+
         //action tir de block
         if (Input.GetAxis("Fire1") > 0 && shootcooldowntimer < 0)
         {
@@ -305,12 +305,7 @@ public class Main : MonoBehaviour {
             {
                 var x = Mathf.RoundToInt(player.transform.position.x);
                 var y = player.transform.position.y;
-                bool okSpawn = spawnPlayerBlock(x, y - 1);
-                if (spawnBlockTime > 0 && okSpawn)
-                {
-                    playerVSpeed = 0;
-                    freezeMoveTimer = spawnBlockTime;
-                }
+                spawnPlayerBlock(x, y - 1);
             }
             else if (Input.GetAxis("Vertical") > 0)
             {
@@ -369,11 +364,16 @@ public class Main : MonoBehaviour {
         }
 
         //animation
-
+        
         var aimdown = false;
         if (Input.GetAxis("Vertical") < 0)
         {
             aimdown = true;
+        }
+        var crouching = false;
+        if (playerGroundDist() == 0 && aimdown)
+        {
+            crouching = true;
         }
         if (Input.GetAxis("Fire2") > 0)
         {
@@ -398,8 +398,21 @@ public class Main : MonoBehaviour {
                 }
                 else
                 {
-                    animation.Play("crouchwait");
+                    if (crouching && !crouch)
+                    {
+                        animation.Play("crouch");
+                        animation["crouch"].speed = 2f;
+                    }
+                    else if (!animation.IsPlaying("crouch"))
+                    {
+                        animation.Play("crouchwait");
+                    }
                 }
+                crouch = true;
+            }
+            else
+            {
+                crouch = false;
             }
 
             if (jump)
@@ -446,7 +459,7 @@ public class Main : MonoBehaviour {
 
             if (walk)
             {
-                if (!animation.IsPlaying("fall") && !jump)
+                if ( !jump)
                 {
                     if (shoot1)
                     {
@@ -455,14 +468,14 @@ public class Main : MonoBehaviour {
                     else if (shoot2)
                     {
                         animation.Play("Sfirerun");
-                    } else
+                    } else if (!animation.IsPlaying("fall"))
                     {
                         animation.Play("run");
                         animation["run"].speed = 0.8f;
                     }
                 }
             }
-            else if (!animation.IsPlaying("fall") && !animation.IsPlaying("jump") && !jump && !aimdown && !dead)
+            else if (!animation.IsPlaying("fall") && !jump && !aimdown && !dead)
             {
                 if (shoot1)
                 {
@@ -472,7 +485,7 @@ public class Main : MonoBehaviour {
                 {
                     animation.Play("Sfire");
                 }
-                else
+                else if (!animation.IsPlaying("fall"))
                 {
                     animation.Play("idle");
                 }
@@ -799,7 +812,6 @@ public class Main : MonoBehaviour {
 
         if (block != null)
         {
-            block.spawnTimer = spawnBlockTime;
             block.IsDestrutible = true;
             block.Vspeed = playerVSpeed;
             playerBlocks.Add(block);
