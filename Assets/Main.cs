@@ -37,7 +37,7 @@ public class Main : MonoBehaviour {
     private float fallHeight = 0;
     private bool loadingLevel = false;
     private bool dead = false;
-    private int nextlevel = 1;
+    private int nextLoadlevel = 0;
 
 
     private float jumptimer = 0;
@@ -56,7 +56,7 @@ public class Main : MonoBehaviour {
         source = GetComponent<AudioSource>();
         playerVSpeed = 0;
         fallHeight = 0;
-        nextlevel = SceneManager.GetActiveScene().buildIndex;
+        nextLoadlevel = SceneManager.GetActiveScene().buildIndex;
 
         source.PlayOneShot(music);
         source.loop = true;
@@ -246,40 +246,40 @@ public class Main : MonoBehaviour {
                         }
                     }
                 }
+            }
 
-                playerVSpeed += vaccel * Time.deltaTime;
+            playerVSpeed += vaccel * Time.deltaTime;
 
-                if (playerVSpeed < -maxDropSpeed)
+            if (playerVSpeed < -maxDropSpeed)
+            {
+                playerVSpeed = -maxDropSpeed;
+            }
+
+            if (playerVSpeed > 0)
+            {
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
+
+                var y = Mathf.CeilToInt(player.transform.position.y);
+                var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
+                var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
+
+                if (blocks[x1, y + 1] != null || blocks[x2, y + 1] != null)
                 {
-                    playerVSpeed = -maxDropSpeed;
+                    player.transform.position = new Vector3(player.transform.position.x, y - 1, player.transform.position.z);
                 }
+            }
 
-                if (playerVSpeed > 0)
+            if (playerVSpeed < 0)
+            {
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
+
+                var y = Mathf.FloorToInt(player.transform.position.y);
+                var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
+                var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
+
+                if (blocks[x1, y] != null || blocks[x2, y] != null)
                 {
-                    player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
-
-                    var y = Mathf.CeilToInt(player.transform.position.y);
-                    var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
-                    var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
-
-                    if (blocks[x1, y + 1] != null || blocks[x2, y + 1] != null)
-                    {
-                        player.transform.position = new Vector3(player.transform.position.x, y - 1, player.transform.position.z);
-                    }
-                }
-
-                if (playerVSpeed < 0)
-                {
-                    player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + playerVSpeed * Time.deltaTime, player.transform.position.z);
-
-                    var y = Mathf.FloorToInt(player.transform.position.y);
-                    var x1 = Mathf.FloorToInt(player.transform.position.x + hitboxMargin);
-                    var x2 = Mathf.CeilToInt(player.transform.position.x - hitboxMargin);
-
-                    if (blocks[x1, y] != null || blocks[x2, y] != null)
-                    {
-                        player.transform.position = new Vector3(player.transform.position.x, y + 1, player.transform.position.z);
-                    }
+                    player.transform.position = new Vector3(player.transform.position.x, y + 1, player.transform.position.z);
                 }
             }
         }
@@ -432,7 +432,7 @@ public class Main : MonoBehaviour {
 
             if (walk)
             {
-                if (!animation.IsPlaying("fall") && !animation.IsPlaying("jump"))
+                if (!animation.IsPlaying("fall") && !jump)
                 {
                     if (shoot1)
                     {
@@ -505,9 +505,15 @@ public class Main : MonoBehaviour {
             loadLevel(0.2f, false);
         }
 
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            loadLevel(0.2f, false);
+            nextLoadlevel = 0;
+        }
+
         if (loadingLevel && loadLevelTimer < 0)
         {
-            SceneManager.LoadScene(nextlevel, LoadSceneMode.Single);
+            SceneManager.LoadScene(nextLoadlevel, LoadSceneMode.Single);
         }
     }
 
@@ -801,10 +807,7 @@ public class Main : MonoBehaviour {
         loadLevelTimer = delay;
         if (next)
         {
-            nextlevel = SceneManager.GetActiveScene().buildIndex + 1;
-        } else
-        {
-            nextlevel = SceneManager.GetActiveScene().buildIndex;
+            nextLoadlevel = SceneManager.GetActiveScene().buildIndex + 1;
         }
     }
 
