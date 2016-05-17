@@ -8,6 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Title.unity
   - enabled: 1
+    path: Assets/StageSelect.unity
+  - enabled: 1
     path: Assets/LevelA.unity
   - enabled: 1
     path: Assets/LevelB.unity
