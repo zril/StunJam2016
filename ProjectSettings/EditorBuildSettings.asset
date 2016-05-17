@@ -22,11 +22,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/LevelD.unity
   - enabled: 1
-    path: Assets/LevelE.unity
+    path: Assets/LevelI.unity
   - enabled: 1
     path: Assets/LevelZMax.unity
   - enabled: 1
-    path: Assets/LevelI.unity
+    path: Assets/LevelE.unity
   - enabled: 1
     path: Assets/LevelK.unity
   - enabled: 1
