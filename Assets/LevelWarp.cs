@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LevelWarp : MonoBehaviour {
 
-    public int leveljump = 2;
+    public int levelindex;
 
 	// Use this for initialization
 	void Start () {

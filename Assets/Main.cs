@@ -525,7 +525,7 @@ public class Main : MonoBehaviour {
                     loadLevel(1f, 1);
                 } else
                 {
-                    loadLevel(1f, warp.leveljump);
+                    loadLevel(1f, warp.levelindex);
                 }
             }
         }
@@ -560,14 +560,13 @@ public class Main : MonoBehaviour {
         if (Input.GetButtonDown("Cancel"))
         {
             restarting = true;
-            loadLevel(0.2f, 0);
-            nextLoadlevel = SceneManager.GetActiveScene().buildIndex;
+            loadLevel(0.2f, SceneManager.GetActiveScene().buildIndex);
         }
 
         if (Input.GetButtonDown("Start"))
         {
             reseting = true;
-            loadLevel(1f, -1);
+            loadLevel(1f, 0);
         }
 
         if (loadingLevel && loadLevelTimer < 0)
@@ -885,19 +884,13 @@ public class Main : MonoBehaviour {
         source.PlayOneShot(boxdeathclip);
     }
 
-    private void loadLevel(float delay, int incLevel)
+    private void loadLevel(float delay, int nextLevel)
     {
         if (!loadingLevel)
         {
             loadingLevel = true;
             loadLevelTimer = delay;
-            if (incLevel < 0)
-            {
-                nextLoadlevel = 0;
-            } else
-            {
-                nextLoadlevel = SceneManager.GetActiveScene().buildIndex + incLevel;
-            }
+            nextLoadlevel = nextLevel;
             
         }
     }
@@ -909,8 +902,7 @@ public class Main : MonoBehaviour {
             Debug.Log("death");
             dead = true;
             source.PlayOneShot(deathclip);
-            loadLevel(0.8f, 0);
-            nextLoadlevel = SceneManager.GetActiveScene().buildIndex;
+            loadLevel(0.8f, SceneManager.GetActiveScene().buildIndex);
         }
         
     }
