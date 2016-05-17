@@ -615,6 +615,10 @@ public class Main : MonoBehaviour {
                                 if (blocks[x, y] != null)
                                 {
                                     block.Obj.transform.position = new Vector3(block.Obj.transform.position.x, y + 1, block.Obj.transform.position.z);
+                                    if (blocks[x, y].Obj.CompareTag("Kill") && block.Obj.CompareTag("Indestructible"))
+                                    {
+                                        removeBlock(block);
+                                    }
                                 }
                                 else
                                 {
