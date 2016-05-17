@@ -518,9 +518,16 @@ public class Main : MonoBehaviour {
             if (!loadingLevel)
             {
                 source.PlayOneShot(winclip);
+                Debug.Log("end");
+                var warp = objects[posx, posy].Obj.GetComponent<LevelWarp>();
+                if (warp == null)
+                {
+                    loadLevel(1f, 1);
+                } else
+                {
+                    loadLevel(1f, warp.leveljump);
+                }
             }
-            Debug.Log("end");
-            loadLevel(1f, true);
         }
         if (objects[posx, posy] != null && objects[posx, posy].Obj.CompareTag("SoundTrigger"))
         {
@@ -553,15 +560,14 @@ public class Main : MonoBehaviour {
         if (Input.GetButtonDown("Cancel"))
         {
             restarting = true;
-            loadLevel(0.2f, false);
+            loadLevel(0.2f, 0);
             nextLoadlevel = SceneManager.GetActiveScene().buildIndex;
         }
 
         if (Input.GetButtonDown("Start"))
         {
             reseting = true;
-            loadLevel(1f, false);
-            nextLoadlevel = 0;
+            loadLevel(1f, -1);
         }
 
         if (loadingLevel && loadLevelTimer < 0)
@@ -879,16 +885,20 @@ public class Main : MonoBehaviour {
         source.PlayOneShot(boxdeathclip);
     }
 
-    private void loadLevel(float delay, bool next)
+    private void loadLevel(float delay, int incLevel)
     {
         if (!loadingLevel)
         {
             loadingLevel = true;
             loadLevelTimer = delay;
-            if (next)
+            if (incLevel < 0)
             {
-                nextLoadlevel = SceneManager.GetActiveScene().buildIndex + 1;
+                nextLoadlevel = 0;
+            } else
+            {
+                nextLoadlevel = SceneManager.GetActiveScene().buildIndex + incLevel;
             }
+            
         }
     }
 
@@ -899,7 +909,7 @@ public class Main : MonoBehaviour {
             Debug.Log("death");
             dead = true;
             source.PlayOneShot(deathclip);
-            loadLevel(0.8f, false);
+            loadLevel(0.8f, 0);
             nextLoadlevel = SceneManager.GetActiveScene().buildIndex;
         }
         
