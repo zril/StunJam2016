@@ -522,7 +522,7 @@ public class Main : MonoBehaviour {
                 var warp = objects[posx, posy].Obj.GetComponent<LevelWarp>();
                 if (warp == null)
                 {
-                    loadLevel(1f, 1);
+                    loadLevel(1f, SceneManager.GetActiveScene().buildIndex + 1);
                 } else
                 {
                     loadLevel(1f, warp.levelindex);
