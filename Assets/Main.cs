@@ -546,7 +546,7 @@ public class Main : MonoBehaviour {
         if (Input.GetButtonDown("Cancel"))
         {
             restarting = true;
-            loadLevel(0.5f, false);
+            loadLevel(0.2f, false);
             nextLoadlevel = SceneManager.GetActiveScene().buildIndex;
         }
 
