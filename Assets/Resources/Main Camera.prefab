@@ -52,7 +52,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -169,7 +169,9 @@ MonoBehaviour:
   deathclip: {fileID: 8300000, guid: eba3eae42e661c141a9c425f8bd232a2, type: 3}
   winclip: {fileID: 8300000, guid: 196df45facf54ec43884e99bc0cb19ba, type: 3}
   music: {fileID: 0}
-  boxdeathclip: {fileID: 8300000, guid: 4c3df92b0bd2b994d87fb46c6d1e6046, type: 3}
+  boxkillclip: {fileID: 8300000, guid: 4c3df92b0bd2b994d87fb46c6d1e6046, type: 3}
+  boxautodeathclip: {fileID: 8300000, guid: 3810f0dcd4f9c92409aa6015e261b72c, type: 3}
+  boxlavadeathclip: {fileID: 8300000, guid: 4c3df92b0bd2b994d87fb46c6d1e6046, type: 3}
   jumpclip: {fileID: 8300000, guid: 87b6c289d7d9fbc43a2878c5cb20499c, type: 3}
   shoot1clip: {fileID: 8300000, guid: a8261e5f3bf16f54c872b6ebe8da1a95, type: 3}
   shoot2clip: {fileID: 8300000, guid: 799b771c36ceea548ad761203150401a, type: 3}

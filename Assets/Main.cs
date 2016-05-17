@@ -16,7 +16,9 @@ public class Main : MonoBehaviour {
     public AudioClip deathclip;
     public AudioClip winclip;
     public AudioClip music;
-    public AudioClip boxdeathclip;
+    public AudioClip boxkillclip;
+    public AudioClip boxautodeathclip;
+    public AudioClip boxlavadeathclip;
     public AudioClip jumpclip;
     public AudioClip shoot1clip;
     public AudioClip shoot2clip;
@@ -629,7 +631,7 @@ public class Main : MonoBehaviour {
                                     block.Obj.transform.position = new Vector3(block.Obj.transform.position.x, y + 1, block.Obj.transform.position.z);
                                     if (blocks[x, y].Obj.CompareTag("Kill") && block.Obj.CompareTag("Indestructible"))
                                     {
-                                        removeBlock(block);
+                                        removeBlock(block, 2);
                                     }
                                 }
                                 else
@@ -840,7 +842,7 @@ public class Main : MonoBehaviour {
             {
                 Block removed = playerBlocks[0];
                 playerBlocks.RemoveAt(0);
-                removeBlock(removed);
+                removeBlock(removed, 1);
             }
             return true;
         }
@@ -869,19 +871,35 @@ public class Main : MonoBehaviour {
             res = true;
             if (blocks[x, y].IsDestrutible)
             {
-                removeBlock(blocks[x, y]);
+                removeBlock(blocks[x, y], 0);
             }
         }
 
         return res;
     }
 
-    private void removeBlock(Block block)
+    private void removeBlock(Block block, int death)
     {
         Destroy(block.Obj);
         blocks[block.X, block.Y] = null;
         playerBlocks.Remove(block);
-        source.PlayOneShot(boxdeathclip);
+        AudioClip clip = boxkillclip;
+        switch (death)
+        {
+            case 0 :
+                clip = boxkillclip;
+                break;
+            case 1:
+                clip = boxautodeathclip;
+                break;
+            case 2:
+                clip = boxlavadeathclip;
+                break;
+            default:
+                break;
+
+        }
+        source.PlayOneShot(clip);
     }
 
     private void loadLevel(float delay, int nextLevel)
