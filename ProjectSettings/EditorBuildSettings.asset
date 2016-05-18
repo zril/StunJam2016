@@ -10,8 +10,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/StageSelect.unity
   - enabled: 1
-    path: Assets/LevelA.unity
-  - enabled: 1
     path: Assets/LevelB.unity
   - enabled: 1
     path: Assets/LevelF.unity
@@ -36,14 +34,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/LevelN.unity
   - enabled: 1
+    path: Assets/LevelO.unity
+  - enabled: 1
     path: Assets/LVLTim1.unity
   - enabled: 1
     path: Assets/LVLTim2.unity
   - enabled: 1
     path: Assets/LevelZDan.unity
   - enabled: 1
+    path: Assets/LevelZMax.unity
+  - enabled: 1
     path: Assets/LevelZZ.unity
   - enabled: 1
-    path: Assets/LevelZMax.unity
+    path: Assets/LevelZY.unity
   - enabled: 1
     path: Assets/EndScreen.unity
