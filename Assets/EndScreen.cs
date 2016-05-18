@@ -13,7 +13,7 @@ public class EndScreen : MonoBehaviour {
 	void Update () {
         if (Input.GetButtonDown("Cancel"))
         {
-            Application.Quit();
+            SceneManager.LoadScene(1, LoadSceneMode.Single);
         }
 
         if (Input.GetButtonDown("Start"))
