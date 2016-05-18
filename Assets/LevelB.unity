@@ -7522,26 +7522,6 @@ Prefab:
       propertyPath: m_Name
       value: Main Camera (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 2002812, guid: 6921ead2a3bbd934c8cec79645bf6aff, type: 2}
-      propertyPath: orthographic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8242484, guid: 6921ead2a3bbd934c8cec79645bf6aff, type: 2}
-      propertyPath: MaxDistance
-      value: 1155.8916
-      objectReference: {fileID: 0}
-    - target: {fileID: 2002812, guid: 6921ead2a3bbd934c8cec79645bf6aff, type: 2}
-      propertyPath: m_BackGroundColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2002812, guid: 6921ead2a3bbd934c8cec79645bf6aff, type: 2}
-      propertyPath: m_BackGroundColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2002812, guid: 6921ead2a3bbd934c8cec79645bf6aff, type: 2}
-      propertyPath: m_BackGroundColor.b
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6921ead2a3bbd934c8cec79645bf6aff, type: 2}
   m_IsPrefabParent: 0
