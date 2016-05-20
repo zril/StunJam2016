@@ -552,7 +552,7 @@ public class Main : MonoBehaviour {
         
         if (Input.GetButton("Zoom"))
         {
-            transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -15);
+            transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -20);
         } else
         {
             transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
