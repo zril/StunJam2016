@@ -1313,10 +1313,10 @@ Transform:
   - {fileID: 1359645511}
   - {fileID: 1031420622}
   - {fileID: 953556680}
+  - {fileID: 93549695}
   - {fileID: 924900925}
   - {fileID: 181193247}
   - {fileID: 1511800566}
-  - {fileID: 93549695}
   - {fileID: 52401215}
   - {fileID: 510910279}
   m_Father: {fileID: 0}
@@ -4126,6 +4126,10 @@ Prefab:
     - target: {fileID: 468336, guid: 7db6ba92bcdbe974ea2bc2ef4ad9e617, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 135456, guid: 7db6ba92bcdbe974ea2bc2ef4ad9e617, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7db6ba92bcdbe974ea2bc2ef4ad9e617, type: 2}

@@ -1985,12 +1985,12 @@ Transform:
   - {fileID: 312259068}
   - {fileID: 2140482501}
   - {fileID: 1644145421}
+  - {fileID: 443584672}
   - {fileID: 479700551}
   - {fileID: 560566717}
-  - {fileID: 443584672}
-  - {fileID: 26182468}
   - {fileID: 193386680}
   - {fileID: 501532878}
+  - {fileID: 26182468}
   - {fileID: 1524119435}
   - {fileID: 1661805006}
   - {fileID: 1502216114}
@@ -8532,8 +8532,8 @@ Transform:
   - {fileID: 470459989}
   - {fileID: 2096769504}
   - {fileID: 1811821372}
-  - {fileID: 2118508549}
   - {fileID: 1071100914}
+  - {fileID: 2118508549}
   m_Father: {fileID: 2103767043}
   m_RootOrder: 5
 --- !u!1001 &902380536
@@ -16370,7 +16370,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 118748, guid: bcbe4522cb8c48544b045ff6c559b6a2, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcbe4522cb8c48544b045ff6c559b6a2, type: 2}
