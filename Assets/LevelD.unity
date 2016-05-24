@@ -2650,6 +2650,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 135456, guid: 7db6ba92bcdbe974ea2bc2ef4ad9e617, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7db6ba92bcdbe974ea2bc2ef4ad9e617, type: 2}
   m_IsPrefabParent: 0
@@ -9773,10 +9777,10 @@ Transform:
   - {fileID: 586044202}
   - {fileID: 745020608}
   - {fileID: 1670360997}
-  - {fileID: 682582214}
-  - {fileID: 1515883098}
-  - {fileID: 225683663}
   - {fileID: 352167941}
+  - {fileID: 225683663}
+  - {fileID: 1515883098}
+  - {fileID: 682582214}
   - {fileID: 433229695}
   - {fileID: 1519722994}
   - {fileID: 1371080145}
